@@ -3,8 +3,7 @@ var keys = require("./keys.js");
 let axios = require("axios");
 let moment = require('moment');
 let Spotify = require('node-spotify-api');
-// var spotify = require('node-spotify-api');
-// var band = require('bandsintown');
+let fs = require('fs');
 
 var nodeArgs = process.argv;
 var operator = nodeArgs[2];
@@ -34,11 +33,15 @@ function movie(value){
         queryUrl = "http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=trilogy";
         axios.get(queryUrl).then(
             function(response) {
-              // If the axios was successful...
-              // Then log the body from the site!
-              console.log(response.data);
-              console.log("Release Year: " + response.data.Year);// Log the Release Year for the movie
-            })
+            // console.log(response.data);
+            console.log("Title: " + response.data.Title);
+            console.log("Release Year: " + response.data.Year);// Log the Release Year for the movie
+            console.log("Rating: " + response.data.Rated);
+            console.log("Country: " + response.data.Country);
+            console.log("Language: " + response.data.Language);
+            console.log("Plot: " + response.data.Plot);
+            console.log("Actors: " + response.data.Actors);
+          })
     }else{
         value ="Mr.Nobody";
         queryUrl = "http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=trilogy";
@@ -46,7 +49,6 @@ function movie(value){
             function(response) {
               // If the axios was successful...
               // Then log the body from the site!
-              console.log(response.data);
               console.log("Title: " + response.data.Title);
               console.log("Release Year: " + response.data.Year);// Log the Release Year for the movie
               console.log("Rating: " + response.data.Rated);
@@ -91,4 +93,19 @@ function spotify(value){
       console.log("Album: "+ data.tracks.items[0].album.name);
 
     });
+}
+
+function doWhat(){
+    fs.readFile('random.txt','utf8',function(err,data){
+        if(err){
+            return console.log(err);
+        }
+
+        let dataArg = data.split(',')
+        if(dataArg[0]==="spotify-this-song"){
+            console.log(dataArg[1]);
+            spotify(dataArg[1]);
+        }
+
+    })
 }
